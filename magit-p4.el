@@ -86,7 +86,12 @@
 (defun magit-p4-submit ()
   "Runs git-p4 submit."
   (interactive)
-  (magit-run-git-async "p4" "submit" (cons "--dry-run" magit-custom-options)))
+  ;; git-p4 invokes editor using values of P4EDITOR or GIT_EDITOR variables
+  ;; here we temporarily set P4EDITOR (it has precedence in git-p4) to "emacsclient"
+  (let ((p4editor (getenv "P4EDITOR")))
+    (setenv "P4EDITOR" "emacsclient")
+    (magit-run-git-async "p4" "submit" (cons "--dry-run" magit-custom-options))
+    (setenv "P4EDITOR" p4editor)))
 
 ;;; Utilities
 
@@ -100,6 +105,7 @@
   "Git P4 extension menu"
   '("Git P4"
     :visible magit-p4-mode
+    ["Clone" magit-p4-clone (magit-p4-enabled)]
     ["Sync" magit-p4-sync (magit-p4-enabled)]
     ["Rebase" magit-p4-rebase (magit-p4-enabled)]
     ["Submit" magit-p4-submit (magit-p4-enabled)]))
@@ -180,11 +186,6 @@
       (user-error "This mode only makes sense with magit"))
   (when (called-interactively-p 'any)
     (magit-refresh)))
-
-;;;###autoload
-(defun turn-on-magit-p4 ()
-  "Unconditionally turn on `magit-p4-mode'."
-  (magit-p4-mode 1))
 
 (provide 'magit-p4)
 ;; Local Variables:
