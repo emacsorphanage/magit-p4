@@ -4,7 +4,7 @@ Attention! This is in development. Some of the info below is nothing but a plain
 
 ## Requirements ##
 
-Emacs 24.x with `magit` and `p4` packages installed. You do not have to install these packages if you use Melpa service - all required dependencies will be dowloaded altogether with `magit-p4`.
+Emacs 24.x with `magit` and `p4` packages installed. You do not have to install these packages if you use Melpa service - all required dependencies will be downloaded altogether with `magit-p4`.
 `git-p4` add-on is obviously required.
 
 ## Installation ##
