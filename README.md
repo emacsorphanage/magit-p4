@@ -51,7 +51,7 @@ While visiting *magit status* buffer press `4` and `r` key. Additional switches 
 ### Submitting ###
 
 While visiting *magit status* buffer press `4` and `r` key. Additional switches are provided in submit submenu. Press `s` key to submit. A buffer will appear where you may add some more info
-to submitted change-set log. Press `C-c C-c` to confirm.
+to submitted change-set log. Press `C-x #` to confirm (`emacsclient` is used).
 
 ## Some consideration using p4 and git-p4 tools ##
 

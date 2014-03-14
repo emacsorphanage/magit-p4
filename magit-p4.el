@@ -2,11 +2,7 @@
 
 ;; Copyright (C) 2014 Damian T. Dobroczyński
 ;;
-;; For a full list of contributors, see the AUTHORS.md file
-;; at the top-level directory of this distribution and at
-;; https://raw.github.com/magit/magit/master/AUTHORS.md
-
-;; Author: Damian T. Doroczy\\'nski <qoocku@gmail.com>
+;; Author: Damian T. Dobroczy\\'nski <qoocku@gmail.com>
 ;; Keywords: vc tools
 ;; Package: magit-p4
 
