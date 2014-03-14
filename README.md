@@ -32,11 +32,11 @@ Being inside Magit status buffer one should press `?` key to reveal magit menu. 
 
 After one of the activities is chosen another menu appears where one may specify additional options and arguments - like `magit` does.
 
-One may use `magit-p4` function outside `magit` buffer but one may be sure to do it while the active buffer reflects a directory _inside_ Git repository. Some of these four functions make use of command prefix argument (<kbd>C-u</kbd>).
+One may use `magit-p4` function outside `magit` buffer but be sure to do it while the active buffer reflects a directory _inside_ Git repository. Some of these four functions make use of command prefix argument (<kbd>C-u</kbd>).
 
 ### Cloning ###
 
-Press <kbd>4</kbd> key in `magit` main menu and then <kbd>`c`</kbd> key. The submenu presents some additional switches and arguments. The most important argument is `=d` (destination directory). Without specifying this argument the default directory will be used for cloning which may not be appropriate. Then one must press <kbd>`c`</kbd> key once more. The minibuffer will ask for P4 depot to clone. Pressing `Tab` key invokes completion (here `p4` package comes with help). Unfortunately, the completion might be longsome due to network communication. The cloning process is launched asynchronously so one must visit *magit process* buffer from time to time to know cloning current status.
+Press <kbd>4</kbd> key in `magit` main menu and then <kbd>`c`</kbd> key. The submenu presents some additional switches and arguments. The most important argument is `=d` (destination directory). Without specifying this argument the default directory will be used for cloning which may not be appropriate. Then one must press <kbd>`c`</kbd> key once more. The minibuffer will ask for P4 depot to clone. Pressing <kbd>Tab</kbd> key invokes completion (here `p4` package comes with help). Unfortunately, the completion might be longsome due to network communication. The cloning process is launched asynchronously so one must visit *magit process* buffer from time to time to know cloning current status.
 
 You may use directly `magit-p4-clone` command prepending with <kbd>C-u</kbd> - the command will ask you for target directory after you choose P4 depot to clone.
 
