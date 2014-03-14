@@ -86,7 +86,7 @@
   ;; here we temporarily set P4EDITOR (it has precedence in git-p4) to "emacsclient"
   (let ((p4editor (getenv "P4EDITOR")))
     (setenv "P4EDITOR" "emacsclient")
-    (magit-run-git-async "p4" "submit" (cons "--dry-run" magit-custom-options))
+    (magit-run-git-async "p4" "submit" magit-custom-options)
     (setenv "P4EDITOR" p4editor)))
 
 ;;; Utilities
