@@ -78,6 +78,15 @@
   (interactive)
   (magit-run-git-async "p4" "rebase" magit-custom-options))
 
+(defun magit-p4/server-edit-end-keys ()
+  "Private function.
+   Binds C-c C-c keys to finish editing submit log
+   when using emacsclient tools."
+  (when (current-local-map)
+    (use-local-map (copy-keymap (current-local-map))))
+  (when server-buffer-clients
+    (local-set-key (kbd "C-c C-c") 'server-edit)))
+
 ;;;###autoload
 (defun magit-p4-submit ()
   "Runs git-p4 submit."
@@ -167,8 +176,36 @@
       (magit-key-mode-generate group)))
     (magit-key-mode-insert-action 'dispatch "4" "git-p4" 'magit-key-mode-popup-p4))
 
+;; add keyboard hook to finish log edition with C-c C-c
+(add-hook 'server-switch-hook 'magit-p4/server-edit-end-keys)
+
+(defun magit-p4/insert-job (&optional job)
+  "Inserts job reference in a buffer.
+  The insertion assumes that it should be 'Jobs:' entry in the buffer.
+  If not - it inserts such at the current point of the buffer. Then it asks (if
+  applied interactively) for a job id using `p4` completion function.
+  Finally it inserts the id under `Jobs:` entry."
+  (interactive
+   (list (p4-read-arg-string "Job: " "" 'job)))
+  (when job
+    (let* ((jobs-entry (save-excursion (re-search-backward "^Jobs:" nil t)))
+           (jobs-entry (if jobs-entry jobs-entry (re-search-forward "^Jobs:" nil t))))
+      (if (not jobs-entry)
+          ;; it inserts "Jobs:" entry in the CURRENT point!
+          (insert "\nJobs:\n\t")
+        ;; move to past the end of `Jobs:` entry
+        (progn
+          (goto-char jobs-entry)
+          (end-of-line)
+          (insert "\n\t")))
+      (insert job))))
+
 (defvar magit-p4-mode-map
-  (make-sparse-keymap))
+  "Minor P4 mode key map.
+   So far used in submit log edit buufer."
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-x j") 'magit-p4/insert-job)
+    map))
 
 ;;; Mode
 
