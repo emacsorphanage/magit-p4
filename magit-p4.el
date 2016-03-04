@@ -48,9 +48,9 @@
 
 ;;;###autoload
 (defun magit-p4-clone (depot-path &optional target-dir)
-  "Clone given depoth path.
+  "Clone given DEPOT-PATH.
 
-   The first argument is P4 depot path to clone. The second optional argument
+   The first argument is P4 depot path to clone. The TARGET-DIR argument
    is directory which will hold the Git repository."
   (interactive
    (append (list (p4-read-arg-string "Depot path: " "//" 'filespec))
@@ -63,7 +63,7 @@
 
 ;;;###autoload
 (defun magit-p4-sync (&optional depot-path)
-  "Synchronize with default and/or given depoth path.
+  "Synchronize with default and/or given DEPOT-PATH.
 
    The optional argument is P4 depot path which will be synchronised with.
    If not present, git-p4 will try to synchronize with default depot path which
@@ -78,13 +78,13 @@
 
 ;;;###autoload
 (defun magit-p4-rebase ()
-  "Runs git-p4 rebase."
+  "Run git-p4 rebase."
   (interactive)
   (magit-run-git-async "p4" "rebase"))
 
 (defun magit-p4/server-edit-end-keys ()
   "Private function.
-   Binds C-c C-c keys to finish editing submit log
+Binds C-c C-c keys to finish editing submit log
    when using emacsclient tools."
   (when (current-local-map)
     (use-local-map (copy-keymap (current-local-map))))
@@ -93,7 +93,7 @@
 
 ;;;###autoload
 (defun magit-p4-submit ()
-  "Runs git-p4 submit."
+  "Run git-p4 submit."
   (interactive)
   (with-editor "P4EDITOR"
     (magit-run-git-with-editor "p4" "submit" (magit-p4-submit-arguments))))
@@ -174,7 +174,8 @@
 (add-hook 'server-switch-hook 'magit-p4/server-edit-end-keys)
 
 (defun magit-p4/insert-job (&optional job)
-  "Inserts job reference in a buffer.
+  "Insert JOB reference in a buffer.
+
   The insertion assumes that it should be 'Jobs:' entry in the buffer.
   If not - it inserts such at the current point of the buffer. Then it asks (if
   applied interactively) for a job id using `p4` completion function.
