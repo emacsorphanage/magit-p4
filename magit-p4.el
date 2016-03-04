@@ -116,62 +116,56 @@
                     '("Extensions")
                     magit-p4-extension-menu)
 
-;;; Add Perfoce group and its keys
-(let ((p4-groups '((p4 (actions (("c" "Clone" magit-key-mode-popup-p4-clone)
-                                 ("r" "Rebase" magit-key-mode-popup-p4-rebase)
-                                 ("S" "Submit" magit-key-mode-popup-p4-submit)
-                                 ("s" "Sync" magit-key-mode-popup-p4-sync))))
-                   (p4-sync  (actions (("s" "Sync" magit-p4-sync)))
-                             (switches (("-b" "Branch" "--branch")
-                                        ("-db" "Detect branches" "--detect-branches")
-                                        ("-s" "Silent" "--silent")
-                                        ("-ib" "import Labels" "--import-labels")
-                                        ("-il" "import Local" "--import-local")
-                                        ("-p" "Keep path" "--keep-path")
-                                        ("-c" "Client spec" "--use-client-spec")))
-                             (arguments (("=c" "Changes files" "--changesfile=" read-from-minibuffer)
-                                         ("=m" "Max changes" "--max-changes=" read-from-minibuffer))))
-                   (p4-clone (actions (("c" "Clone" magit-p4-clone)))
-                             (switches (("-b" "Bare clone" "--bare")))
-                             (arguments (("=d" "Destination directory" "--destination=" read-directory-name)
-                                         ("=/" "Exclude depot path" "-/ " read-from-minibuffer))))
-                   (p4-submit (actions (("s" "Submit all" magit-p4-submit)))
-                              (switches (("-M" "Detect renames" "-M")
-                                         ("-u" "Preserve user" "--preserve-user")
-                                         ("-l" "Export labels" "--export-labels")
-                                         ("-n" "Dry run" "--dry-run")
-                                         ("-p" "Prepare P4 only" "--prepare-p4-only")))
-                              (arguments (("=o" "Upstream location to submit" "--origin=" read-from-minibuffer)
-                                          ("=c" "Conflict resolution (ask|skip|quit)" "--conflict="
-                                           (lambda (prompt)
-                                             (first (completing-read-multiple prompt '("ask" "skip" "quit")))))
-                                          ("=b" "Sync with branch after" "--branch=" read-from-minibuffer))))
-                   (p4-rebase (actions (("r" "Rebase" magit-p4-rebase)))
-                              (switches (("-l" "Import labels" "--import-labels")))))))
-  (dolist (group-def p4-groups)
-    (let* ((group (first group-def))
-           (keys (cdr group-def))
-           (switches (append '(("-g" "GIT_DIR" "--git-dir")
-                               ("-v" "Verbose" "--verbose"))
-                             (second (assoc 'switches keys))))
-           (arguments (second (assoc 'arguments keys)))
-           (actions (second (assoc 'actions keys))))
-      (message "group: %s %s" group actions)
-      ;; (re-)create the group
-      (magit-key-mode-add-group group)
-      ;; magit so far is buggy here 'cause "arguments" group is not created by default
-      (let ((options (assoc group magit-key-mode-groups)))
-        (setcdr (last options) (list (list 'arguments)))
-        (dolist (switch switches)
-          (apply 'magit-key-mode-insert-switch (cons group switch)))
-        (assoc 'arguments options)
-        (dolist (argument arguments)
-          (apply 'magit-key-mode-insert-argument (cons group argument)))
-        (dolist (action actions)
-          (apply 'magit-key-mode-insert-action (cons group action))))
-        ;; generate and bind the menu popup function
-      (magit-key-mode-generate group)))
-    (magit-key-mode-insert-action 'dispatch "4" "git-p4" 'magit-key-mode-popup-p4))
+
+(magit-define-popup magit-p4-popup
+  "Show popup buffer featuring git p4 commands"
+  'magit-commands
+  :man-page "git-p4"
+  :actions '((?c "Clone" magit-p4-clone-popup)
+             (?s "Sync" magit-p4-sync-popup)
+             (?r "Rebase" magit-p4-rebase)
+             (?S "Submit" magit-p4-submit-popup)))
+
+(magit-define-popup magit-p4-sync-popup
+  "Pull changes from p4"
+  'magit-commands
+  :options '((?b "Branch" "--branch")
+             (?m "Limit the number of imported changes" "--max-changes=")
+             (?c "Changes files" "--changesfile=")
+             (?/ "Exclude depot path" "-/"))
+  :switches '((?d "Detect branches" "--detect-branches")
+              (?v "Be move verbose " "--verbose")
+              (?l "Query p4 for labels" "--detect-labels")
+              (?b "Import labels" "--import-lables")
+              (?i "Import changes as local" "--import-local")
+              (?p "Keep entire BRANCH/DIR?SUBDIR prefix during import" "--keep-path")
+              (?s "Only sync files that are included in the p4 Client Spec" "--use-client-spec"))
+  :actions '((?s "Sync" magit-p4-sync)))
+
+(magit-define-popup magit-p4-submit-popup
+  "Submit changes from git to p4"
+  :switches '((?M "Detect renames" "-M")
+              (?v "Be more verbose" "--verbose")
+              (?u "Preserve user" "--preserve-user")
+              (?l "Export labels" "--export-labels")
+              (?n "Dry run" "--dry-run")
+              (?p "Prepare P4 only" "--prepare-p4-only"))
+  :options '((?o "Origin" "--origin=" magit-read-branch-or-commit)
+             (?b "Sync with branch after submission" "--branch=" magit-read-branch)
+             (?N "Name of git branch to submit" " " magit-read-branch-or-commit)
+             (?c "Conflict resolution (ask|skip|quit)" "--conflict="
+                 (lambda (prompt &optional default)
+                   (magit-completing-read prompt '("ask" "skip" "quit") nil nil nil nil default))))
+  :actions '((?s "Submit all" magit-p4-submit)))
+
+(magit-define-popup magit-p4-clone-popup
+  "Clone repository from p4"
+  :switches '((?b "Bare clone" "--bare"))
+  :options '((?d "Destination directory" "--destination=" read-directory-name)
+             (?/ "Exclude depot path" "-/ "))
+  :actions '((?c "Clone" magit-p4-clone)))
+
+(magit-define-popup-action 'magit-dispatch-popup ?4 "Git P4" 'magit-p4-popup ?!)
 
 ;; add keyboard hook to finish log edition with C-c C-c
 (add-hook 'server-switch-hook 'magit-p4/server-edit-end-keys)
