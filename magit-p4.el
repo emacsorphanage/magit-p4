@@ -3,7 +3,10 @@
 ;; Copyright (C) 2014 Damian T. Dobroczyński
 ;;
 ;; Author: Damian T. Dobroczy\\'nski <qoocku@gmail.com>
+;; Version: 1.1
+;; Package-Requires: ((magit "2.1") (magit-popup) (p4) (cl-lib))
 ;; Keywords: vc tools
+;; URL: https://github.com/qoocku/magit-p4
 ;; Package: magit-p4
 
 ;; Magit-p4 is free software; you can redistribute it and/or modify it
