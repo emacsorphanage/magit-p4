@@ -98,11 +98,6 @@ Binds C-c C-c keys to finish editing submit log
   (with-editor "P4EDITOR"
     (magit-run-git-with-editor "p4" "submit" (magit-p4-submit-arguments))))
 
-;;; Utilities
-
-(defun magit-p4-enabled ()
-  t)
-
 ;;; Keymaps
 
 (easy-menu-define magit-p4-extension-menu
@@ -110,10 +105,10 @@ Binds C-c C-c keys to finish editing submit log
   "Git P4 extension menu"
   '("Git P4"
     :visible magit-p4-mode
-    ["Clone" magit-p4-clone (magit-p4-enabled)]
-    ["Sync" magit-p4-sync (magit-p4-enabled)]
-    ["Rebase" magit-p4-rebase (magit-p4-enabled)]
-    ["Submit" magit-p4-submit (magit-p4-enabled)]))
+    ["Clone" magit-p4-clone t]
+    ["Sync" magit-p4-sync t]
+    ["Rebase" magit-p4-rebase t]
+    ["Submit" magit-p4-submit t]))
 
 (easy-menu-add-item 'magit-mode-menu
                     '("Extensions")
