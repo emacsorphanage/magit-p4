@@ -51,11 +51,12 @@
    is directory which will hold the Git repository."
   (interactive
    (append (list (p4-read-arg-string "Depot path: " "//" 'filespec))
-           (if (and (not (search "destination=" magit-custom-options))
+           (if (and (not (search "destination=" (magit-p4-clone-arguments)))
                     current-prefix-arg)
              (read-directory-name "Target directory: ")
              nil)))
-  (magit-run-git-async "p4" "clone" (cons depot-path magit-custom-options)))
+  (magit-run-git-async "p4" "clone" (cons depot-path (magit-p4-clone-arguments))))
+
 
 ;;;###autoload
 (defun magit-p4-sync (&optional depot-path)
@@ -69,14 +70,14 @@
      (list (p4-read-arg-string "With (another) depot path: " "//" 'filespec))))
   (magit-run-git-async "p4" "sync"
                        (cond (depot-path
-                              (cons depot-path magit-custom-options))
-                             (t magit-custom-options))))
+                              (cons depot-path (magit-p4-sync-arguments)))
+                             (t (magit-p4-sync-arguments)))))
 
 ;;;###autoload
 (defun magit-p4-rebase ()
   "Runs git-p4 rebase."
   (interactive)
-  (magit-run-git-async "p4" "rebase" magit-custom-options))
+  (magit-run-git-async "p4" "rebase"))
 
 (defun magit-p4/server-edit-end-keys ()
   "Private function.
