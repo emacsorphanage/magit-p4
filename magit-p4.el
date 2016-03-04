@@ -92,12 +92,8 @@
 (defun magit-p4-submit ()
   "Runs git-p4 submit."
   (interactive)
-  ;; git-p4 invokes editor using values of P4EDITOR or GIT_EDITOR variables
-  ;; here we temporarily set P4EDITOR (it has precedence in git-p4) to "emacsclient"
-  (let ((p4editor (getenv "P4EDITOR")))
-    (setenv "P4EDITOR" "emacsclient")
-    (magit-run-git-async "p4" "submit" magit-custom-options)
-    (setenv "P4EDITOR" p4editor)))
+  (with-editor "P4EDITOR"
+    (magit-run-git-with-editor "p4" "submit" (magit-p4-submit-arguments))))
 
 ;;; Utilities
 
