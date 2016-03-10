@@ -4,7 +4,7 @@
 ;;
 ;; Author: Damian T. Dobroczy\\'nski <qoocku@gmail.com>
 ;; Version: 1.1
-;; Package-Requires: ((magit "2.1") (magit-popup) (p4) (cl-lib))
+;; Package-Requires: ((magit "2.1") (magit-popup "2.1") (p4 "12.0") (cl-lib "0.5"))
 ;; Keywords: vc tools
 ;; URL: https://github.com/qoocku/magit-p4
 ;; Package: magit-p4
