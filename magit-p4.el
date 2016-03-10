@@ -50,7 +50,7 @@
 (defun magit-p4-clone (depot-path &optional target-dir)
   "Clone given DEPOT-PATH.
 
-   The first argument is P4 depot path to clone. The TARGET-DIR argument
+   The first argument is P4 depot path to clone.  The TARGET-DIR argument
    is directory which will hold the Git repository."
   (interactive
    (append (list (p4-read-arg-string "Depot path: " "//" 'filespec))
@@ -172,7 +172,7 @@ Binds C-c C-c keys to finish editing submit log
   "Insert JOB reference in a buffer.
 
   The insertion assumes that it should be 'Jobs:' entry in the buffer.
-  If not - it inserts such at the current point of the buffer. Then it asks (if
+  If not - it inserts such at the current point of the buffer.  Then it asks (if
   applied interactively) for a job id using `p4` completion function.
   Finally it inserts the id under `Jobs:` entry."
   (interactive
