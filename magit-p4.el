@@ -82,15 +82,6 @@
   (interactive)
   (magit-run-git-async "p4" "rebase"))
 
-(defun magit-p4/server-edit-end-keys ()
-  "Private function.
-Binds C-c C-c keys to finish editing submit log
-   when using emacsclient tools."
-  (when (current-local-map)
-    (use-local-map (copy-keymap (current-local-map))))
-  (when server-buffer-clients
-    (local-set-key (kbd "C-c C-c") 'server-edit)))
-
 ;;;###autoload
 (defun magit-p4-submit ()
   "Run git-p4 submit."
@@ -164,9 +155,6 @@ Binds C-c C-c keys to finish editing submit log
   :actions '((?c "Clone" magit-p4-clone)))
 
 (magit-define-popup-action 'magit-dispatch-popup ?4 "Git P4" 'magit-p4-popup ?!)
-
-;; add keyboard hook to finish log edition with C-c C-c
-(add-hook 'server-switch-hook 'magit-p4/server-edit-end-keys)
 
 (defun magit-p4/insert-job (&optional job)
   "Insert JOB reference in a buffer.
