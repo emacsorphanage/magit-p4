@@ -65,7 +65,7 @@
 (defun magit-p4-sync (&optional depot-path)
   "Synchronize with default and/or given DEPOT-PATH.
 
-   The optional argument is P4 depot path which will be synchronised with.
+   The optional argument is P4 depot path which will be synchronized with.
    If not present, git-p4 will try to synchronize with default depot path which
    has been cloned to before."
   (interactive
