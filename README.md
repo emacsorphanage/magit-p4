@@ -15,7 +15,7 @@ The package should be available via Melpa service using elpa packages mechanism.
 If you plan to enable the package manually be sure to have `magit` and `p4` installed already
 and add the downloaded package directory to Emacs `load-path`:
 
-    (add-to-list load-path "<path-to-magit-p4-directory")
+    (add-to-list 'load-path "<path-to-magit-p4-directory")
 
 and then you should call:
 
