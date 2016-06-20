@@ -90,8 +90,8 @@
   (with-editor "P4EDITOR"
     (magit-run-git-with-editor "p4" "submit" (magit-p4-submit-arguments))))
 
-;;; Keymaps
 
+;; Menu
 (easy-menu-define magit-p4-extension-menu
   nil
   "Git P4 extension menu"
@@ -107,6 +107,7 @@
                     magit-p4-extension-menu)
 
 
+;;; Keymaps
 (magit-define-popup magit-p4-popup
   "Show popup buffer featuring git p4 commands"
   'magit-commands
