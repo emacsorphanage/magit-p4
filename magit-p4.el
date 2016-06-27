@@ -159,8 +159,9 @@ P4EDITOR and uses custom process filter `magit-p4-process-filter'."
                     '("Extensions")
                     magit-p4-extension-menu)
 
-
 ;;; Keymaps
+
+;;;###autoload (autoload 'magit-p4-popup "magit-p4" nil t)
 (magit-define-popup magit-p4-popup
   "Show popup buffer featuring git p4 commands"
   'magit-commands
