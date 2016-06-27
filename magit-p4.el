@@ -90,7 +90,7 @@
   (magit-p4-run-git-with-editor "p4" "submit" (magit-p4-submit-arguments)))
 
 (defcustom magit-p4-process-yes-or-no-prompt-regexp "\\[\\(y\\)\\]es, \\[\\(n\\)\\]o"
-  "Regexp matching yes-or-no prompt for git-p4"
+  "Regexp matching yes-or-no prompt for git-p4."
   :group 'magit-p4
   :type 'regexp)
 
@@ -109,7 +109,7 @@
          "\n"))))))
 
 (defcustom magit-p4-process-skip-or-quit-regexps '("\\[s\\]kip this commit but apply the rest, or \\[q\\]uit")
-  "List of regexp matching skip-or-quit prompts from git-p4"
+  "List of regexp matching skip-or-quit prompts from git-p4."
   :group 'magit-p4
   :type '(repeat (regexp)))
 
@@ -124,7 +124,7 @@
        0 1) "\n"))))
 
 (defun magit-p4-process-filter (process string)
-  "Filter for git p4"
+  "Filter used by `magit-p4-run-git-with-editor'."
   (with-current-buffer (process-buffer process)
     (magit-p4-process-yes-or-no-prompt process string)
     (magit-p4-process-skip-or-quit process string)))
@@ -132,7 +132,7 @@
 ;;;###autoload
 (defun magit-p4-run-git-with-editor (&rest args)
   "Similar to magit-run-git-with-editor, but also exports
-P4EDITOR and uses custom process filter magit-p4-process-filter."
+P4EDITOR and uses custom process filter `magit-p4-process-filter'."
   (let* ((process (with-editor "P4EDITOR"
                    (apply #'magit-run-git-with-editor args)))
          (old-filter (process-filter process)))
