@@ -1,0 +1,19 @@
+language: c
+
+before_install:
+  - curl -fsSkL https://raw.github.com/rejeep/evm/master/go | bash
+  - export PATH="/home/travis/.evm/bin:$PATH"
+  - evm config path /tmp
+  - evm install $EVM_EMACS --use
+
+env:
+  - EVM_EMACS=emacs-24.4-travis
+  - EVM_EMACS=emacs-24.5-travis
+  - EVM_EMACS=emacs-git-snapshot-travis
+
+install:
+  - emacs --version
+  - emacs --batch --script tests/build-test.el
+
+script:
+  - echo "Nothing to test yet"
