@@ -1,6 +1,7 @@
 # Git-p4 plugin for Magit #
 
 [![MELPA](http://melpa.org/packages/magit-p4-badge.svg)](http://melpa.org/#/magit-p4)
+[![Build Status](https://travis-ci.org/lexa/magit-p4.svg?branch=master)](https://travis-ci.org/lexa/magit-p4)
 
 Attention! This is in development. Some of the info below is nothing but a plain lie!
 

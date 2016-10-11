@@ -1,0 +1,6 @@
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+(package-refresh-contents)
+;(setq byte-compile-error-on-warn t)
+(package-install-file "magit-p4.el")
