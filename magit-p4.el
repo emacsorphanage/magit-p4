@@ -181,7 +181,7 @@ P4EDITOR and uses custom process filter `magit-p4-process-filter'."
   :switches '((?d "Detect branches" "--detect-branches")
               (?v "Be move verbose " "--verbose")
               (?l "Query p4 for labels" "--detect-labels")
-              (?b "Import labels" "--import-lables")
+              (?b "Import labels" "--import-labels")
               (?i "Import changes as local" "--import-local")
               (?p "Keep entire BRANCH/DIR?SUBDIR prefix during import" "--keep-path")
               (?s "Only sync files that are included in the p4 Client Spec" "--use-client-spec"))
