@@ -171,20 +171,26 @@ P4EDITOR and uses custom process filter `magit-p4-process-filter'."
              (?r "Rebase" magit-p4-rebase)
              (?S "Submit" magit-p4-submit-popup)))
 
+(defvar magit-p4-sync-clone-shared-options
+  '((?b "Branch" "--branch=")
+    (?c "Changes files" "--changesfile=")
+    (?m "Limit the number of imported changes" "--max-changes=")
+    (?s "Internal block size to use when iteratively calling p4 changes" "--changes-block-size=")
+    (?/ "Exclude depot path" "-/")))
+
+(defvar magit-p4-sync-clone-shared-switches
+  '((?d "Detect branches" "--detect-branches")
+    (?l "Query p4 for labels" "--detect-labels")
+    (?b "Import labels" "--import-labels")
+    (?i "Import into refs/heads/ , not refs/remotes" "--import-local")
+    (?p "Keep entire BRANCH/DIR/SUBDIR prefix during import" "--keep-path")
+    (?s "Only sync files that are included in the p4 Client Spec" "--use-client-spec")))
+
 (magit-define-popup magit-p4-sync-popup
   "Pull changes from p4"
   'magit-commands
-  :options '((?b "Branch" "--branch")
-             (?m "Limit the number of imported changes" "--max-changes=")
-             (?c "Changes files" "--changesfile=")
-             (?/ "Exclude depot path" "-/"))
-  :switches '((?d "Detect branches" "--detect-branches")
-              (?v "Be move verbose " "--verbose")
-              (?l "Query p4 for labels" "--detect-labels")
-              (?b "Import labels" "--import-labels")
-              (?i "Import changes as local" "--import-local")
-              (?p "Keep entire BRANCH/DIR?SUBDIR prefix during import" "--keep-path")
-              (?s "Only sync files that are included in the p4 Client Spec" "--use-client-spec"))
+  :options magit-p4-sync-clone-shared-options
+  :switches magit-p4-sync-clone-shared-switches
   :actions '((?s "Sync" magit-p4-sync)))
 
 (magit-define-popup magit-p4-submit-popup
@@ -205,9 +211,10 @@ P4EDITOR and uses custom process filter `magit-p4-process-filter'."
 
 (magit-define-popup magit-p4-clone-popup
   "Clone repository from p4"
-  :switches '((?b "Bare clone" "--bare"))
-  :options '((?d "Destination directory" "--destination=" read-directory-name)
-             (?/ "Exclude depot path" "-/ "))
+  :switches (append '((?b "Bare clone" "--bare"))
+                      magit-p4-sync-clone-shared-switches)
+  :options (append '((?d "Destination directory" "--destination=" read-directory-name))
+                   magit-p4-sync-clone-shared-options)
   :actions '((?c "Clone" magit-p4-clone)))
 
 (magit-define-popup-action 'magit-dispatch-popup ?4 "Git P4" 'magit-p4-popup ?!)
