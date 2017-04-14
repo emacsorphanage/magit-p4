@@ -173,7 +173,7 @@ P4EDITOR and uses custom process filter `magit-p4-process-filter'."
 
 (defvar magit-p4-sync-clone-shared-options
   '((?b "Branch" "--branch=")
-    (?c "Changes files" "--changesfile=")
+    (?c "Changes files" "--changesfile=" read-file-name)
     (?m "Limit the number of imported changes" "--max-changes=")
     (?s "Internal block size to use when iteratively calling p4 changes" "--changes-block-size=")
     (?/ "Exclude depot path" "-/")))
