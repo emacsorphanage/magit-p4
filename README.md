@@ -28,10 +28,10 @@ Evalutation of the package code is sufficient to plug into `magit` menu some hel
 
 Being inside Magit status buffer one should press `?` key to reveal magit menu. The menu should be equipped with <kbd>4</kbd> key binded to `magit-p4` submenu, all right. The submenu has four items which represent four activities implemented by `git-p4` add-on:
 
-* Cloning - binded to key <kbd>`c`</kbd> and `magit-p4-clone` function;
-* Syncing - binded to key <kbd>`s`</kbd> and `magit-p4-sync` function;
-* Rebasing - binded to key <kbd>`r`</kbd> and `magit-p4-rebase` function;
-* Submitting - binded to key <kbd>`S`</kbd> (capital "s") and `magit-p4-submit` function.
+* Cloning - bound to key <kbd>`c`</kbd> and `magit-p4-clone` function;
+* Syncing - bound to key <kbd>`s`</kbd> and `magit-p4-sync` function;
+* Rebasing - bound to key <kbd>`r`</kbd> and `magit-p4-rebase` function;
+* Submitting - bound to key <kbd>`S`</kbd> (capital "s") and `magit-p4-submit` function.
 
 After one of the activities is chosen another menu appears where one may specify additional options and arguments - like `magit` does.
 
