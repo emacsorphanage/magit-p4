@@ -1,3 +1,7 @@
+# Maintainer needed ! #
+
+Both, the original creator and the current maintainer have lost the incentive for develop/maintain the package. We even don't have an access to Perforce server any more, so no more testing is done. If you are interested in becoming a maintainer please, [create an issue](https://github.com/qoocku/magit-p4/issues/new?title=I%20want%20to%20be%20a%20maintainer!&body=I%20want%20to%20support%20magit-p4%20and%20have%20access%20to%20Perforce%20server.%0A%0A@lexa)
+
 # Git-p4 plugin for Magit #
 
 [![MELPA](http://melpa.org/packages/magit-p4-badge.svg)](http://melpa.org/#/magit-p4)
