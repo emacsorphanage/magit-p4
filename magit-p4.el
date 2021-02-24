@@ -59,7 +59,8 @@ argument is directory which will hold the Git repository."
                     current-prefix-arg)
              (read-directory-name "Target directory: ")
              nil)))
-  (magit-run-git-async "p4" "clone" (cons depot-path (magit-p4-clone-arguments))))
+  (magit-run-git-async "p4" "clone"
+                       (cons depot-path (magit-p4-clone-arguments))))
 
 
 ;;;###autoload
@@ -89,7 +90,8 @@ depot path which has been cloned to before."
   (interactive)
   (magit-p4-run-git-with-editor "p4" "submit" (magit-p4-submit-arguments)))
 
-(defcustom magit-p4-process-yes-or-no-prompt-regexp "\\[\\(y\\)\\]es, \\[\\(n\\)\\]o"
+(defcustom magit-p4-process-yes-or-no-prompt-regexp
+  "\\[\\(y\\)\\]es, \\[\\(n\\)\\]o"
   "Regexp matching yes-or-no prompt for git-p4."
   :group 'magit-p4
   :type 'regexp)
@@ -108,7 +110,8 @@ depot path which has been cloned to before."
           string)
          "\n"))))))
 
-(defcustom magit-p4-process-skip-or-quit-regexps '("\\[s\\]kip this commit but apply the rest, or \\[q\\]uit")
+(defcustom magit-p4-process-skip-or-quit-regexps
+  '("\\[s\\]kip this commit but apply the rest, or \\[q\\]uit")
   "List of regexp matching skip-or-quit prompts from git-p4."
   :group 'magit-p4
   :type '(repeat (regexp)))
@@ -137,7 +140,6 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
   (let* ((process (with-editor "P4EDITOR"
                    (apply #'magit-run-git-with-editor args)))
          (old-filter (process-filter process)))
-
     (set-process-filter
      process
      `(lambda (process str)
@@ -176,7 +178,8 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
   '((?b "Branch" "--branch=")
     (?c "Changes files" "--changesfile=" read-file-name)
     (?m "Limit the number of imported changes" "--max-changes=")
-    (?s "Internal block size to use when iteratively calling p4 changes" "--changes-block-size=")
+    (?s "Internal block size to use when iteratively calling p4 changes"
+        "--changes-block-size=")
     (?/ "Exclude depot path" "-/")))
 
 (defvar magit-p4-sync-clone-shared-switches
@@ -185,7 +188,8 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
     (?b "Import labels" "--import-labels")
     (?i "Import into refs/heads/ , not refs/remotes" "--import-local")
     (?p "Keep entire BRANCH/DIR/SUBDIR prefix during import" "--keep-path")
-    (?s "Only sync files that are included in the p4 Client Spec" "--use-client-spec")))
+    (?s "Only sync files that are included in the p4 Client Spec"
+        "--use-client-spec")))
 
 (magit-define-popup magit-p4-sync-popup
   "Pull changes from p4"
@@ -203,18 +207,22 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
               (?n "Dry run" "--dry-run")
               (?p "Prepare P4 only" "--prepare-p4-only"))
   :options '((?o "Origin" "--origin=" magit-read-branch-or-commit)
-             (?b "Sync with branch after submission" "--branch=" magit-read-branch)
-             (?N "Name of git branch to submit" " " magit-read-branch-or-commit)
+             (?b "Sync with branch after submission"
+                 "--branch=" magit-read-branch)
+             (?N "Name of git branch to submit"
+                 " " magit-read-branch-or-commit)
              (?c "Conflict resolution (ask|skip|quit)" "--conflict="
                  (lambda (prompt &optional default)
-                   (magit-completing-read prompt '("ask" "skip" "quit") nil nil nil nil default))))
+                   (magit-completing-read prompt '("ask" "skip" "quit")
+                                          nil nil nil nil default))))
   :actions '((?s "Submit all" magit-p4-submit)))
 
 (magit-define-popup magit-p4-clone-popup
   "Clone repository from p4"
   :switches (append '((?b "Bare clone" "--bare"))
                       magit-p4-sync-clone-shared-switches)
-  :options (append '((?d "Destination directory" "--destination=" read-directory-name))
+  :options (append '((?d "Destination directory"
+                         "--destination=" read-directory-name))
                    magit-p4-sync-clone-shared-options)
   :actions '((?c "Clone" magit-p4-clone)))
 
@@ -231,8 +239,9 @@ using `p4` completion function.  Finally it inserts the id under
   (interactive
    (list (p4-read-arg-string "Job: " "" 'job)))
   (when job
-    (let* ((jobs-entry (save-excursion (re-search-backward "^Jobs:" nil t)))
-           (jobs-entry (if jobs-entry jobs-entry (re-search-forward "^Jobs:" nil t))))
+    (let ((jobs-entry (or (save-excursion
+                            (re-search-backward "^Jobs:" nil t))
+                          (re-search-forward "^Jobs:" nil t))))
       (if (not jobs-entry)
           ;; it inserts "Jobs:" entry in the CURRENT point!
           (insert "\nJobs:\n\t")
