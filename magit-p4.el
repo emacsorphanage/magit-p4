@@ -272,8 +272,8 @@ So far used in submit log edit buffer.")
   :lighter " P4"
   :require 'magit-p4
   :keymap 'magit-p4-mode-map
-  (or (derived-mode-p 'magit-mode)
-      (user-error "This mode only makes sense with magit"))
+  (unless (derived-mode-p 'magit-mode)
+    (user-error "This mode only makes sense with magit"))
   (when (called-interactively-p 'any)
     (magit-refresh)))
 
