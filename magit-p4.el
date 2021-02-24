@@ -56,7 +56,9 @@ The first argument is P4 depot path to clone.  The TARGET-DIR
 argument is directory which will hold the Git repository."
   (interactive
    (append (list (p4-read-arg-string "Depot path: " "//" 'filespec))
-           (if (and (not (search "destination=" (magit-p4-clone-arguments)))
+           (if (and (not (cl-some (lambda (arg)
+                                    (string-match-p "--destination=" arg))
+                                  (magit-p4-clone-arguments)))
                     current-prefix-arg)
              (read-directory-name "Target directory: ")
              nil)))
