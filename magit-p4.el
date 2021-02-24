@@ -51,8 +51,8 @@
 (defun magit-p4-clone (depot-path &optional target-dir)
   "Clone given DEPOT-PATH.
 
-   The first argument is P4 depot path to clone.  The TARGET-DIR argument
-   is directory which will hold the Git repository."
+The first argument is P4 depot path to clone.  The TARGET-DIR
+argument is directory which will hold the Git repository."
   (interactive
    (append (list (p4-read-arg-string "Depot path: " "//" 'filespec))
            (if (and (not (search "destination=" (magit-p4-clone-arguments)))
@@ -66,9 +66,9 @@
 (defun magit-p4-sync (&optional depot-path)
   "Synchronize with default and/or given DEPOT-PATH.
 
-   The optional argument is P4 depot path which will be synchronized with.
-   If not present, git-p4 will try to synchronize with default depot path which
-   has been cloned to before."
+The optional argument is P4 depot path which will be synchronized
+with.  If not present, git-p4 will try to synchronize with default
+depot path which has been cloned to before."
   (interactive
    (when current-prefix-arg
      (list (p4-read-arg-string "With (another) depot path: " "//" 'filespec))))
@@ -131,8 +131,9 @@
 
 ;;;###autoload
 (defun magit-p4-run-git-with-editor (&rest args)
-  "Similar to magit-run-git-with-editor, but also exports
-P4EDITOR and uses custom process filter `magit-p4-process-filter'."
+  "Run git with P4EDITOR set and `magit-p4-process-filter'.
+This is similar to `magit-run-git-with-editor', but also export
+P4EDITOR and use custom process filter `magit-p4-process-filter'."
   (let* ((process (with-editor "P4EDITOR"
                    (apply #'magit-run-git-with-editor args)))
          (old-filter (process-filter process)))
@@ -163,7 +164,7 @@ P4EDITOR and uses custom process filter `magit-p4-process-filter'."
 
 ;;;###autoload (autoload 'magit-p4-popup "magit-p4" nil t)
 (magit-define-popup magit-p4-popup
-  "Show popup buffer featuring git p4 commands"
+  "Show popup buffer featuring git p4 commands."
   'magit-commands
   :man-page "git-p4"
   :actions '((?c "Clone" magit-p4-clone-popup)
@@ -222,10 +223,11 @@ P4EDITOR and uses custom process filter `magit-p4-process-filter'."
 (defun magit-p4/insert-job (&optional job)
   "Insert JOB reference in a buffer.
 
-  The insertion assumes that it should be 'Jobs:' entry in the buffer.
-  If not - it inserts such at the current point of the buffer.  Then it asks (if
-  applied interactively) for a job id using `p4` completion function.
-  Finally it inserts the id under `Jobs:` entry."
+The insertion assumes that it should be 'Jobs:' entry in the
+buffer.  If not - it inserts such at the current point of the
+buffer.  Then it asks (if applied interactively) for a job id
+using `p4` completion function.  Finally it inserts the id under
+`Jobs:' entry."
   (interactive
    (list (p4-read-arg-string "Job: " "" 'job)))
   (when job
@@ -243,7 +245,7 @@ P4EDITOR and uses custom process filter `magit-p4-process-filter'."
 
 (defvar magit-p4-mode-map
   "Minor P4 mode key map.
-   So far used in submit log edit buufer."
+So far used in submit log edit buffer."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-x j") 'magit-p4/insert-job)
     map))
@@ -252,7 +254,7 @@ P4EDITOR and uses custom process filter `magit-p4-process-filter'."
 
 ;;;###autoload
 (define-minor-mode magit-p4-mode
-  "P4 support for Magit"
+  "P4 support for Magit."
   :lighter " P4"
   :require 'magit-p4
   :keymap 'magit-p4-mode-map
