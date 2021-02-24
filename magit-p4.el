@@ -258,11 +258,11 @@ using `p4` completion function.  Finally it inserts the id under
       (insert job))))
 
 (defvar magit-p4-mode-map
-  "Minor P4 mode key map.
-So far used in submit log edit buffer."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-x j") 'magit-p4/insert-job)
-    map))
+    map)
+  "Minor P4 mode key map.
+So far used in submit log edit buffer.")
 
 ;;; Mode
 
