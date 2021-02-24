@@ -5,7 +5,7 @@
 ;; Author: Damian T. Dobroczy\\'nski <qoocku@gmail.com>
 ;; Maintainer: Aleksey Fedotov <lexa@cfotr.com>
 ;; Version: 1.1
-;; Package-Requires: ((magit "2.1") (magit-popup "2.1") (p4 "12.0") (cl-lib "0.5"))
+;; Package-Requires: ((emacs "25.1) (magit "2.1") (magit-popup "2.1") (p4 "12.0") (cl-lib "0.5"))
 ;; Keywords: vc tools
 ;; URL: https://github.com/qoocku/magit-p4
 ;; Package: magit-p4
@@ -35,7 +35,8 @@
 (eval-when-compile
   (require 'cl-lib)
   (require 'find-lisp)
-  (require 'p4))
+  (require 'p4)
+  (require 'subr-x))
 
 (declare-function find-lisp-find-files-internal 'find-lisp)
 
@@ -97,8 +98,9 @@ depot path which has been cloned to before."
   :type 'regexp)
 
 (defun magit-p4-process-yes-or-no-prompt (process string)
-  (-when-let (beg (string-match magit-p4-process-yes-or-no-prompt-regexp string))
-    (let ((max-mini-window-height 30))
+  (let ((max-mini-window-height 30)
+        (beg (string-match magit-p4-process-yes-or-no-prompt-regexp string)))
+    (when beg
       (process-send-string
        process
        (downcase
@@ -117,14 +119,17 @@ depot path which has been cloned to before."
   :type '(repeat (regexp)))
 
 (defun magit-p4-process-skip-or-quit (process string)
-  (--when-let (magit-process-match-prompt magit-p4-process-skip-or-quit-regexps string)
+  (when-let ((prompt (magit-process-match-prompt
+                      magit-p4-process-skip-or-quit-regexps
+                      string)))
     (process-send-string
      process
      (concat
       (substring
        (magit-process-kill-on-abort process
-         (magit-completing-read it  '("skip" "quit") nil t))
-       0 1) "\n"))))
+         (magit-completing-read prompt '("skip" "quit") nil t))
+       0 1)
+      "\n"))))
 
 (defun magit-p4-process-filter (process string)
   "Filter used by `magit-p4-run-git-with-editor'."
