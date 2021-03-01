@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2014 Damian T. Dobroczyński
 ;;
-;; Author: Damian T. Dobroczy\\'nski <qoocku@gmail.com>
+;; Author: Damian T. Dobroczyński <qoocku@gmail.com>
 ;; Maintainer: Aleksey Fedotov <lexa@cfotr.com>
 ;; Version: 1.1
 ;; Package-Requires: ((emacs "25.1) (magit "2.1") (magit-popup "2.1") (p4 "12.0") (cl-lib "0.5"))
