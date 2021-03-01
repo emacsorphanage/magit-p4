@@ -4,7 +4,6 @@
 ;;
 ;; Author: Damian T. Dobroczyński <qoocku@gmail.com>
 ;; Maintainer: Aleksey Fedotov <lexa@cfotr.com>
-;; Version: 1.1
 ;; Package-Requires: ((emacs "25.1) (magit "2.1") (magit-popup "2.1") (p4 "12.0") (cl-lib "0.5"))
 ;; Keywords: vc tools
 ;; URL: https://github.com/qoocku/magit-p4
