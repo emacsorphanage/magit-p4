@@ -1,41 +1,44 @@
-# Maintainer needed ! #
-
-Both, the original creator and the current maintainer have lost the incentive for develop/maintain the package. We even don't have an access to Perforce server any more, so no more testing is done. If you are interested in becoming a maintainer please, [create an issue](https://github.com/qoocku/magit-p4/issues/new?title=I%20want%20to%20be%20a%20maintainer!&body=I%20want%20to%20support%20magit-p4%20and%20have%20access%20to%20Perforce%20server.%0A%0A@lexa)
-
 # Git-p4 plugin for Magit #
 
 [![MELPA](http://melpa.org/packages/magit-p4-badge.svg)](http://melpa.org/#/magit-p4)
 [![Build Status](https://travis-ci.org/lexa/magit-p4.svg?branch=master)](https://travis-ci.org/lexa/magit-p4)
 
-Attention! This is in development. Some of the info below is nothing but a plain lie!
+This package is in development, and some functionality might be missing.
 
 ## Requirements ##
 
-Emacs 24.x with `magit-2.1` or newer and `p4` packages installed. You do not have to install these packages if you use Melpa service - all required dependencies will be downloaded altogether with `magit-p4`.
-`git-p4` add-on is obviously required.
+Emacs 25.1 with `magit-3.3.0` or newer, `transient-0.4.3` or newer, and `p4` packages installed. You do not have to install these packages yourself if you use [MELPA](https://melpa.org) - all required dependencies will be downloaded together with `magit-p4`.
+
+Additionally, the `git-p4` add-on is required to be installed on your system (outside of Emacs). If running `git p4` gives you a short help string rather than complaining that 'p4' is not a git command, you have it installed and are good to go. Ordinarily, git comes with `git-p4` included, so no extra steps should be necesssary, but Debian and Ubuntu notably do _not_ package it. If that is the case for you, you can download [`git-p4.py` from git's own source](https://github.com/git/git/blob/master/git-p4.py) and put it somewhere in your `$PATH`.
 
 ## Installation ##
 
-The package should be available via Melpa service using elpa packages mechanism.
-If you plan to enable the package manually be sure to have `magit` and `p4` installed already
-and add the downloaded package directory to Emacs `load-path`:
+The recommended way to install `magit-p4` is via MELPA and `use-package`:
 
-    (add-to-list 'load-path "<path-to-magit-p4-directory")
+```elisp
+(use-package magit-p4)
+```
 
-and then you should call:
+If you plan to enable the package manually be sure to have `magit` and `p4` installed already and add the downloaded package directory to Emacs `load-path`:
+
+    (add-to-list 'load-path "<path-to-magit-p4-directory>")
+
+and then call:
 
     (require 'magit-p4)
 
-Evalutation of the package code is sufficient to plug into `magit` menu some helpful key bindings.
+Regardless of which method you choose, `magit-p4` will automatically hook into magit's menu system and will be available as its own set of commands.
 
 ## Usage ##
 
-Being inside Magit status buffer one should press `?` key to reveal magit menu. The menu should be equipped with <kbd>4</kbd> key binded to `magit-p4` submenu, all right. The submenu has four items which represent four activities implemented by `git-p4` add-on:
+Inside the Magit status buffer, press <kbd>?</kbd> key to reveal main magit menu. The menu should be equipped with <kbd>4</kbd> key binded to `magit-p4` submenu. The submenu has four items which represent four activities implemented by `git-p4` add-on:
 
 * Cloning - bound to key <kbd>`c`</kbd> and `magit-p4-clone` function;
-* Syncing - bound to key <kbd>`s`</kbd> and `magit-p4-sync` function;
+* Syncing - bound to key <kbd>`f`</kbd> (similar to magit's fetch) and `magit-p4-sync` function;
 * Rebasing - bound to key <kbd>`r`</kbd> and `magit-p4-rebase` function;
-* Submitting - bound to key <kbd>`S`</kbd> (capital "s") and `magit-p4-submit` function.
+* Submitting - bound to key <kbd>`P`</kbd> (capital "P", similar to magit's push) and `magit-p4-submit` function.
+
+As a shorthand, the <kbd>4</kbd> key is also bound directly in the magit status buffer, similar to the majority of git commands, meaning you don't need to press <kbd>?</kbd> first to access it.
 
 After one of the activities is chosen another menu appears where one may specify additional options and arguments - like `magit` does.
 
