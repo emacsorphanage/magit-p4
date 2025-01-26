@@ -6,12 +6,11 @@ ELS   = $(PKG).el
 ELCS  = $(ELS:.el=.elc)
 
 DEPS  = compat
-DEPS += dash
 DEPS += llama
 DEPS += magit/lisp
-DEPS += magit-popup
 DEPS += p4
 DEPS += seq
+DEPS += transient/lisp
 DEPS += with-editor/lisp
 
 EMACS      ?= emacs

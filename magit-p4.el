@@ -4,7 +4,7 @@
 ;;
 ;; Author: Damian T. Dobroczyński <qoocku@gmail.com>
 ;; Maintainer: Aleksey Fedotov <lexa@cfotr.com>
-;; Package-Requires: ((emacs "25.1") (magit "4.3.0") (magit-popup "2.1") (p4 "12.0") (cl-lib "0.5"))
+;; Package-Requires: ((emacs "25.1") (magit "4.3.0") (transient "0.8.4") (p4 "12.0") (cl-lib "0.5"))
 ;; Keywords: vc tools
 ;; URL: https://github.com/qoocku/magit-p4
 ;; Package: magit-p4
@@ -30,7 +30,6 @@
 ;;; Code:
 
 (require 'magit)
-(require 'magit-popup)
 (require 'p4)
 
 (eval-when-compile (require 'cl-lib))
@@ -181,68 +180,87 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
 ;;; Keymaps
 
 ;;;###autoload (autoload 'magit-p4-popup "magit-p4" nil t)
-(magit-define-popup magit-p4-popup
+(transient-define-prefix magit-p4-popup ()
   "Show popup buffer featuring git p4 commands."
-  'magit-commands
   :man-page "git-p4"
-  :actions '((?c "Clone" magit-p4-clone-popup)
-             (?s "Sync" magit-p4-sync-popup)
-             (?r "Rebase" magit-p4-rebase)
-             (?S "Submit" magit-p4-submit-popup)))
+  ["Actions"
+   ("c" "Clone" magit-p4-clone-popup)
+   ("s" "Sync" magit-p4-sync-popup)
+   ("r" "Rebase" magit-p4-rebase)
+   ("S" "Submit" magit-p4-submit-popup)])
 
 (defvar magit-p4-sync-clone-shared-options
-  '((?b "Branch" "--branch=")
-    (?c "Changes files" "--changesfile=" read-file-name)
-    (?m "Limit the number of imported changes" "--max-changes=")
-    (?s "Internal block size to use when iteratively calling p4 changes"
+  '(("b" "Branch" "--branch=")
+    ("c" "Changes files" "--changesfile=" read-file-name)
+    ("m" "Limit the number of imported changes" "--max-changes=")
+    ("s" "Internal block size to use when iteratively calling p4 changes"
         "--changes-block-size=")
-    (?/ "Exclude depot path" "-/")))
+    ("/" "Exclude depot path" "-/")))
 
 (defvar magit-p4-sync-clone-shared-switches
-  '((?d "Detect branches" "--detect-branches")
-    (?l "Query p4 for labels" "--detect-labels")
-    (?b "Import labels" "--import-labels")
-    (?i "Import into refs/heads/ , not refs/remotes" "--import-local")
-    (?p "Keep entire BRANCH/DIR/SUBDIR prefix during import" "--keep-path")
-    (?s "Only sync files that are included in the p4 Client Spec"
+  '(("d" "Detect branches" "--detect-branches")
+    ("l" "Query p4 for labels" "--detect-labels")
+    ("b" "Import labels" "--import-labels")
+    ("i" "Import into refs/heads/ , not refs/remotes" "--import-local")
+    ("p" "Keep entire BRANCH/DIR/SUBDIR prefix during import" "--keep-path")
+    ("s" "Only sync files that are included in the p4 Client Spec"
         "--use-client-spec")))
 
-(magit-define-popup magit-p4-sync-popup
+(transient-define-prefix magit-p4-sync-popup ()
   "Pull changes from p4"
-  'magit-commands
-  :options magit-p4-sync-clone-shared-options
-  :switches magit-p4-sync-clone-shared-switches
-  :actions '((?s "Sync" magit-p4-sync)))
+  [:description "Arguments"
+   :class transient-column
+   :setup-children
+   (lambda (_)
+     (transient-parse-suffixes 'magit-p4-sync-popup
+      (append magit-p4-sync-clone-shared-options magit-p4-sync-clone-shared-switches)))
+   ]
+  ["Actions"
+   ("s" "Sync" magit-p4-sync)])
 
-(magit-define-popup magit-p4-submit-popup
+(transient-define-prefix magit-p4-submit-popup ()
   "Submit changes from git to p4"
-  :switches '((?M "Detect renames" "-M")
-              (?v "Be more verbose" "--verbose")
-              (?u "Preserve user" "--preserve-user")
-              (?l "Export labels" "--export-labels")
-              (?n "Dry run" "--dry-run")
-              (?p "Prepare P4 only" "--prepare-p4-only"))
-  :options '((?o "Origin" "--origin=" magit-read-branch-or-commit)
-             (?b "Sync with branch after submission"
-                 "--branch=" magit-read-branch)
-             (?N "Name of git branch to submit"
-                 " " magit-read-branch-or-commit)
-             (?c "Conflict resolution (ask|skip|quit)" "--conflict="
-                 (lambda (prompt &optional default)
-                   (magit-completing-read prompt '("ask" "skip" "quit")
-                                          nil nil nil nil default))))
-  :actions '((?s "Submit all" magit-p4-submit)))
+  ["Arguments"
+   ("M" "Detect renames" "-M")
+   ("v" "Be more verbose" "--verbose")
+   ("u" "Preserve user" "--preserve-user")
+   ("l" "Export labels" "--export-labels")
+   ("n" "Dry run" "--dry-run")
+   ("p" "Prepare P4 only" "--prepare-p4-only")
+   ("o" "Origin" "--origin=" magit-read-branch-or-commit)
+   ("b" "Sync with branch after submission"
+    "--branch=" magit-read-branch)
+   ("N" "Name of git branch to submit"
+    " " magit-read-branch-or-commit)
+   ("c" "Conflict resolution (ask|skip|quit)" "--conflict="
+    (lambda (prompt &optional default)
+      (magit-completing-read prompt '("ask" "skip" "quit")
+                             nil nil nil nil default)))]
+  ["Submit"
+   ("s" "Submit all" magit-p4-submit)])
 
-(magit-define-popup magit-p4-clone-popup
+(transient-define-prefix magit-p4-clone-popup ()
   "Clone repository from p4"
-  :switches (append '((?b "Bare clone" "--bare"))
-                      magit-p4-sync-clone-shared-switches)
-  :options (append '((?d "Destination directory"
-                         "--destination=" read-directory-name))
-                   magit-p4-sync-clone-shared-options)
-  :actions '((?c "Clone" magit-p4-clone)))
+  ["Options"
+   :setup-children
+   (lambda (children)
+     (append children
+             (transient-parse-suffixes 'magit-p4-clone-popup magit-p4-sync-clone-shared-switches)))
+   ("b" "Bare clone" "--bare")
+   ]
+  ["Arguments"
+   :setup-children
+   (lambda (children)
+     (append children
+             (transient-parse-suffixes 'magit-p4-clone-popup magit-p4-sync-clone-shared-options)))
+   ("D" "Destination directory" "--destination=" read-directory-name)]
+  ["Actions"
+   ("c" "Clone" magit-p4-clone)])
 
-(magit-define-popup-action 'magit-dispatch-popup ?4 "Git P4" 'magit-p4-popup ?!)
+(transient-insert-suffix 'magit-dispatch '(0 0 0)
+  '("4" "Git P4" magit-p4-popup))
+
+(bind-key (kbd "4") #'magit-p4-popup magit-mode-map)
 
 (defun magit-p4/insert-job (&optional job)
   "Insert JOB reference in a buffer.
