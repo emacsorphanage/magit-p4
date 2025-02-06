@@ -1,10 +1,10 @@
-;;; magit-p4.el --- git-p4 plug-in for Magit
+;;; magit-p4.el --- git-p4 plug-in for Magit  -*- lexical-binding:t -*-
 
 ;; Copyright (C) 2014 Damian T. Dobroczyński
 ;;
 ;; Author: Damian T. Dobroczyński <qoocku@gmail.com>
 ;; Maintainer: Aleksey Fedotov <lexa@cfotr.com>
-;; Package-Requires: ((emacs "25.1") (magit "2.1") (magit-popup "2.1") (p4 "12.0") (cl-lib "0.5"))
+;; Package-Requires: ((emacs "25.1") (magit "4.3.0") (magit-popup "2.1") (p4 "12.0") (cl-lib "0.5"))
 ;; Keywords: vc tools
 ;; URL: https://github.com/qoocku/magit-p4
 ;; Package: magit-p4
@@ -30,14 +30,15 @@
 ;;; Code:
 
 (require 'magit)
+(require 'magit-popup)
+(require 'p4)
 
-(eval-when-compile
-  (require 'cl-lib)
-  (require 'find-lisp)
-  (require 'p4)
-  (require 'subr-x))
+(eval-when-compile (require 'cl-lib))
+(eval-when-compile (require 'find-lisp))
+(eval-when-compile (require 'subr-x))
 
-(declare-function find-lisp-find-files-internal 'find-lisp)
+(declare-function find-lisp-find-files-internal "find-lisp"
+                  (directory file-predicate directory-predicate))
 
 ;;; Options
 
@@ -62,7 +63,8 @@ argument is directory which will hold the Git repository."
              (read-directory-name "Target directory: ")
              nil)))
   (magit-run-git-async "p4" "clone"
-                       (cons depot-path (magit-p4-clone-arguments))))
+                       (cons depot-path (magit-p4-clone-arguments))
+                       target-dir))
 
 
 ;;;###autoload
@@ -98,6 +100,14 @@ depot path which has been cloned to before."
   :group 'magit-p4
   :type 'regexp)
 
+(defmacro magit-p4-process-kill-on-abort (process &rest body)
+  ;; This is a copy of the obsolete `magit-process-kill-on-abort'.
+  (declare (indent 1)
+           (debug (form body)))
+  `(let ((minibuffer-local-map
+          (magit-process-make-keymap ,process minibuffer-local-map)))
+     ,@body))
+
 (defun magit-p4-process-yes-or-no-prompt (process string)
   (let ((max-mini-window-height 30)
         (beg (string-match magit-p4-process-yes-or-no-prompt-regexp string)))
@@ -108,7 +118,7 @@ depot path which has been cloned to before."
         (concat
          (match-string
           (if (save-match-data
-                (magit-process-kill-on-abort process
+                (magit-p4-process-kill-on-abort process
                   (yes-or-no-p (substring string 0 beg)))) 1 2)
           string)
          "\n"))))))
@@ -127,7 +137,7 @@ depot path which has been cloned to before."
      process
      (concat
       (substring
-       (magit-process-kill-on-abort process
+       (magit-p4-process-kill-on-abort process
          (magit-completing-read prompt '("skip" "quit") nil t))
        0 1)
       "\n"))))
@@ -237,10 +247,10 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
 (defun magit-p4/insert-job (&optional job)
   "Insert JOB reference in a buffer.
 
-The insertion assumes that it should be 'Jobs:' entry in the
+The insertion assumes that it should be `Jobs:' entry in the
 buffer.  If not - it inserts such at the current point of the
 buffer.  Then it asks (if applied interactively) for a job id
-using `p4` completion function.  Finally it inserts the id under
+using `p4' completion function.  Finally it inserts the id under
 `Jobs:' entry."
   (interactive
    (list (p4-read-arg-string "Job: " "" 'job)))
