@@ -8,6 +8,7 @@
 ;; Keywords: vc tools
 ;; URL: https://github.com/qoocku/magit-p4
 ;; Package: magit-p4
+;; Version: 1.3.0snapshot
 
 ;; Magit-p4 is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by
