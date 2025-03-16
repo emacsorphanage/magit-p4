@@ -4,7 +4,8 @@
 ;;
 ;; Author: Damian T. Dobroczyński <qoocku@gmail.com>
 ;; Maintainer: Aleksey Fedotov <lexa@cfotr.com>
-;; Package-Requires: ((emacs "26.3") (magit "4.0.0") (transient "0.8.0") (p4 "12.0") (cl-lib "1.0"))
+;; Package-Requires: ((emacs "26.3") (magit "4.0.0") (transient "0.8.0")
+;;                    (p4 "12.0") (cl-lib "1.0") (with-editor "3.4.1"))
 ;; Keywords: vc tools
 ;; URL: https://github.com/qoocku/magit-p4
 ;; Package: magit-p4
