@@ -1,0 +1,9 @@
+;;; -*- mode:emacs-lisp -*-
+
+(;; Our direct dependencies
+ ("magit" . "v4.0.0")
+ ("transient" . "v0.8.0")
+ ("with-editor" . "v3.4.1")
+ ;; Transitive
+ ("dash" . "2.19.1"))
+:gamma
