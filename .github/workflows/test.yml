@@ -2,7 +2,7 @@ name: Magit-P4 tests
 
 on:
   push:
-    branches: [ $default-branch, use-transient ]
+    branches: [ $default-branch ]
   pull_request:
     branches: [ $default-branch ]
 
