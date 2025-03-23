@@ -1,9 +1,10 @@
 ;;; magit-p4.el --- git-p4 plug-in for Magit  -*- lexical-binding:t; coding:utf-8 -*-
 
-;; Copyright (C) 2014 Damian T. Dobroczyński
+;; Copyright (C) 2014-2025 Damian T. Dobroczyński, Aleksey Fedotov, Maciej Katafiasz
 ;;
 ;; Author: Damian T. Dobroczyński <qoocku@gmail.com>
-;; Maintainer: Aleksey Fedotov <lexa@cfotr.com>
+;;         Aleksey Fedotov <lexa@cfotr.com>
+;; Maintainer: Maciej Katafiasz <mathrick@gmail.com>
 ;; Package-Requires: ((emacs "27.1") (magit "4.0.0") (transient "0.8.0")
 ;;                    (p4 "12.0") (cl-lib "1.0") (with-editor "3.4.1"))
 ;; Keywords: vc tools
