@@ -35,8 +35,13 @@
 (require 'magit)
 (require 'p4)
 
-(eval-when-compile (require 'cl-lib))
-(eval-when-compile (require 'subr-x))
+(eval-when-compile
+  (require 'cl-lib)
+  (require 'find-lisp)
+  (require 'subr-x)
+  (require 'transient))
+
+(declare-function find-lisp-find-files-internal 'find-lisp)
 
 ;;; Options
 
@@ -85,9 +90,15 @@ depot path which has been cloned to before."
   (interactive)
   (magit-run-git-async "p4" "rebase"))
 
-;;;###autoload
-(defun magit-p4-submit ()
+;;;###autoload (autoload 'magit-p4-submit "magit-p4")
+(transient-define-suffix magit-p4-submit ()
   "Run git-p4 submit."
+  :description (lambda ()
+                 (if-let ((commits (transient-arg-value
+                                   "--commit=" (transient-get-value))))
+                     (format "Submit selected commits (%s)"
+                             (propertize commits 'face 'bold))
+                   "Submit all"))
   (interactive)
   (magit-p4-run-git-with-editor "p4" "submit" (transient-args #'magit-p4-submit-popup)))
 
@@ -219,6 +230,14 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
   ["Actions"
    ("p" "Sync" magit-p4-sync)])
 
+(defun magit-p4--submit-commits-init-value (obj)
+  (let ((commits (magit-region-values '(commit branch))))
+    (when commits
+      (oset obj value
+            (case (length commits)
+              (1 (first commits))
+              (t (format "%s~..%s" (car (last commits)) (first commits))))))))
+
 (transient-define-prefix magit-p4-submit-popup ()
   "Submit changes from git to p4"
   ["Options"
@@ -236,9 +255,12 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
    ("-N" "Name of git branch to submit"
     " " :reader ,(magit-p4--make-reader 'magit-p4-read-branch-or-commit))
    ("-c" "Conflict resolution (ask|skip|quit)" "--conflict="
-    :choices ("ask" "skip" "quit"))]
+    :choices ("ask" "skip" "quit"))
+   ("-C" "Only submit specified commit(s)"
+    "--commit=" :reader ,(magit-p4--make-reader 'magit-read-range-or-commit)
+    :init-value magit-p4--submit-commits-init-value)]
   ["Submit"
-   ("p" "Submit all" magit-p4-submit)])
+   ("p" magit-p4-submit)])
 
 (transient-define-prefix magit-p4-clone-popup ()
   "Clone repository from p4"
