@@ -28,7 +28,7 @@ installed.
 > [`straight.el`](https://github.com/radian-software/straight.el):
 >
 > ```
-> (use-package p4 :straight (:fork (:repo "JohnC32/perforce-emacs")))
+> (use-package p4 :straight (:repo "JohnC32/perforce-emacs"))
 > ```
 
 Additionally, the `git-p4` add-on is required to be installed on your system (outside of
