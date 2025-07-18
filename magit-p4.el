@@ -37,11 +37,8 @@
 
 (eval-when-compile
   (require 'cl-lib)
-  (require 'find-lisp)
   (require 'subr-x)
   (require 'transient))
-
-(declare-function find-lisp-find-files-internal 'find-lisp)
 
 ;;; Options
 
@@ -234,9 +231,9 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
   (let ((commits (magit-region-values '(commit branch))))
     (when commits
       (oset obj value
-            (case (length commits)
-              (1 (first commits))
-              (t (format "%s~..%s" (car (last commits)) (first commits))))))))
+            (cl-case (length commits)
+              (1 (cl-first commits))
+              (t (format "%s~..%s" (car (last commits)) (cl-first commits))))))))
 
 (transient-define-prefix magit-p4-submit-popup ()
   "Submit changes from git to p4"
