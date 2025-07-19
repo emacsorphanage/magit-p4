@@ -3,6 +3,9 @@
 (defvar use-old-dependencies nil
   "If non-nil, use oldest possible versions of dependencies, to test declared package compatibility.")
 
+(defvar test-results-file "results.xml"
+  "Where to save the JUnit XML test results")
+
 ;; Autodetermined by `eldev init'.
 (eldev-use-package-archive 'gnu-elpa)
 (eldev-use-package-archive 'melpa)
@@ -10,6 +13,8 @@
 (eldev-use-plugin 'autoloads)
 
 (setf eldev-test-framework 'buttercup)
+(setf (alist-get 'buttercup-junit eldev-known-tool-packages) '(:package buttercup-junit))
+(eldev-add-extra-dependencies 'test '(:tool buttercup-junit))
 (eldev-add-loading-roots 'test "tests")
 
 (unless (or (fboundp 'lisp-data-mode)
@@ -88,3 +93,16 @@ as a part of `magit', as it won't be detected by
   (use-straight-repository 'transient)
   (use-straight-repository 'with-editor)
   (use-straight-repository 'dash))
+
+;; Set up dependencies manually for testing compatibility with old versions of Emacs and libraries
+(eldev-defoption set-test-results-file (file)
+  :options (--results-file)
+  :value file
+  :for-command test
+  (setf test-results-file file))
+
+;; Use buttercup-junit to generate XML results file
+(add-hook 'eldev-test-buttercup-hook (lambda (_)
+                                       (require 'buttercup-junit)
+                                       (setf buttercup-reporter 'buttercup-junit-reporter)
+                                       (setf buttercup-junit-result-file (expand-file-name test-results-file))))

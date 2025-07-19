@@ -1,5 +1,7 @@
 ;;; -*- lexical-binding: t; -*-
 
+(eval-when-compile (require 'cl-lib))
+
 (defvar *test-data-root* (expand-file-name
                           "data/"
                           (file-name-directory load-file-name)))
@@ -31,3 +33,11 @@
   (setf unread-command-events (append unread-command-events
                                       (listify-key-sequence (kbd keys)))))
 
+(cl-defmacro without-transient-debugger (&body body)
+  ;; Buttercup installs its own debugger, so we need to make sure transient doesn't overwrite it
+  `(let ((current-debugger debugger))
+     (cl-letf (((symbol-function 'transient--exit-and-debug)
+               (lambda (&rest args)
+                 (transient--emergency-exit :debugger)
+                 (apply current-debugger args))))
+      ,@body)))
