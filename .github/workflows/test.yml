@@ -2,9 +2,8 @@ name: Run tests
 
 on:
   push:
-    branches: [ $default-branch ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ master ]
 
 permissions:
   contents: read
@@ -27,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-20.04
+          - ubuntu-22.04
           - ubuntu-24.04
           - windows-latest
         emacs_version:
@@ -62,6 +61,6 @@ jobs:
       if: (!cancelled())
       uses: actions/upload-artifact@v4
       with:
-        name: Test results for ${{ matrix.emacs_version }}@${{ matrix.os }}
+        name: test-${{ matrix.emacs_version }}@${{ matrix.os }}
         path: |
           test-*.xml
