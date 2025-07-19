@@ -199,7 +199,7 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
    ("r" "Rebase" magit-p4-rebase)
    ("P" "Submit" magit-p4-submit-popup)])
 
-(eval-and-compile ;magit-p4-sync-clone-shared-arguments
+(eval-and-compile
   (defvar magit-p4-sync-clone-shared-arguments
     '(("-b" "Branch" "--branch=")
       ("-c" "Changes files" "--changesfile=" :reader transient-read-existing-file)
@@ -208,7 +208,7 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
        "--changes-block-size=")
       ("-/" "Exclude depot path" "-/"))))
 
-(eval-and-compile ;magit-p4-sync-clone-shared-options
+(eval-and-compile
   (defvar magit-p4-sync-clone-shared-options
     '(("-d" "Detect branches" "--detect-branches")
       ("-l" "Query p4 for labels" "--detect-labels")
@@ -221,8 +221,10 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
 (transient-define-prefix magit-p4-sync-popup ()
   "Pull changes from p4"
   ["Options"
+   :class transient-column
    magit-p4-sync-clone-shared-options]
   ["Arguments"
+   :class transient-column
    magit-p4-sync-clone-shared-arguments]
   ["Actions"
    ("p" "Sync" magit-p4-sync)])
@@ -266,9 +268,11 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
 (transient-define-prefix magit-p4-clone-popup ()
   "Clone repository from p4"
   ["Options"
+   :class transient-column
    magit-p4-sync-clone-shared-options
    ("-b" "Bare clone" "--bare")]
   ["Arguments"
+   :class transient-column
    magit-p4-sync-clone-shared-arguments
    ("-D" "Destination directory" "--destination=" read-directory-name)]
   ["Actions"
