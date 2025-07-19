@@ -243,7 +243,8 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
    ("-u" "Preserve user" "--preserve-user")
    ("-l" "Export labels" "--export-labels")
    ("-n" "Dry run" "--dry-run")
-   ("-p" "Prepare P4 only" "--prepare-p4-only")]
+   ("-p" "Prepare P4 only" "--prepare-p4-only")
+   ("-s" "Shelve instead of submitting" "--shelve")]
 
   ["Arguments"
    ("-o" "Origin" "--origin=" :reader ,(magit-p4--make-reader 'magit-read-branch-or-commit))
@@ -255,7 +256,10 @@ P4EDITOR and use custom process filter `magit-p4-process-filter'."
     :choices ("ask" "skip" "quit"))
    ("-C" "Only submit specified commit(s)"
     "--commit=" :reader ,(magit-p4--make-reader 'magit-read-range-or-commit)
-    :init-value magit-p4--submit-commits-init-value)]
+    :init-value magit-p4--submit-commits-init-value)
+   ("-S" "Update an existing shelve" "--update-shelve=" :multi-value repeat
+    :reader magit-completing-read-multiple*
+    :prompt "Shelve number(s), separate with commas for multiple: ")]
   ["Submit"
    ("p" magit-p4-submit)])
 
