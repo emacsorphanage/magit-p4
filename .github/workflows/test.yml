@@ -39,8 +39,10 @@ jobs:
 
     - name: Test the project
       run: |
+        eldev --packaged compile -W
         eldev --packaged test
 
     - name: Test the project (backwards compatibility mode)
       run: |
+        eldev --packaged --old-deps compile -W
         eldev --packaged --old-deps test
