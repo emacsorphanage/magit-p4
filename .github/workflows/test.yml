@@ -1,4 +1,4 @@
-name: Magit-P4 tests
+name: Run tests
 
 on:
   push:
@@ -10,6 +10,17 @@ permissions:
   contents: read
 
 jobs:
+  # https://github.com/marketplace/actions/publish-test-results#support-fork-repositories-and-dependabot-branches
+  event_file:
+    name: "Save event file for test report generation"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: event
+          path: ${{ github.event_path }}
+
   build:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -40,9 +51,17 @@ jobs:
     - name: Test the project
       run: |
         eldev --packaged compile -W
-        eldev --packaged test
+        eldev --packaged test -B --results-file test-standard.xml
 
     - name: Test the project (backwards compatibility mode)
       run: |
         eldev --packaged --old-deps compile -W
-        eldev --packaged --old-deps test
+        eldev --packaged --old-deps test -B --results-file test-old-deps.xml
+
+    - name: Upload Test Results
+      if: (!cancelled())
+      uses: actions/upload-artifact@v4
+      with:
+        name: Test results for ${{ matrix.emacs_version }}@${{ matrix.os }}
+        path: |
+          test-*.xml
