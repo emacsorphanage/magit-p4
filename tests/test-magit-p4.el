@@ -1,11 +1,11 @@
 ;;; -*- lexical-binding: t; -*-
 
-(require 'buttercup)
-(require 'cl-lib)
-(require 'magit)
-(require 'magit-p4)
-
-(load "helpers")
+(eval-and-compile
+  (require 'buttercup)
+  (require 'cl-lib)
+  (require 'magit)
+  (require 'magit-p4)
+  (load "helpers"))
 
 (describe "Magit-P4 Magit dispatch menu integration"
   (before-each
