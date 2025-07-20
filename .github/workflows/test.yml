@@ -34,6 +34,14 @@ jobs:
           - 28.2
           - 29.3
           - 30.1
+        variant:
+          - opt: ""
+            name: "standard"
+            id: "std"
+          - opt: "--old-deps"
+            name: "backwards compatibility mode"
+            id: "old"
+    name: Emacs ${{ matrix.emacs_version }} @ ${{ matrix.os }} - ${{ matrix.variant.name }}
 
     steps:
     - name: Set up Emacs
@@ -47,20 +55,19 @@ jobs:
     - name: Check out the source code
       uses: actions/checkout@v4
 
-    - name: Test the project
+    - name: Test the project (${{ matrix.variant.name }})
       run: |
-        eldev --packaged compile -W
-        eldev --packaged test -B --results-file test-standard.xml
-
-    - name: Test the project (backwards compatibility mode)
-      run: |
-        eldev --packaged --old-deps compile -W
-        eldev --packaged --old-deps test -B --results-file test-old-deps.xml
+        # Need --suppress-warnings because p4.el triggers various "package cl is obsolete"
+        # warnings that Emacs just loves making up for no good reason
+        eldev --packaged ${{ matrix.variant.opt }} compile --suppress-warnings -FL
+        # But for our own code, use --warnings-as-errors
+        eldev --packaged ${{ matrix.variant.opt }} compile --warnings-as-errors -L --new=magit-p4.el
+        eldev --packaged ${{ matrix.variant.opt }} test -B --results-file test-${{ matrix.variant.id }}.xml
 
     - name: Upload Test Results
       if: (!cancelled())
       uses: actions/upload-artifact@v4
       with:
-        name: test-${{ matrix.emacs_version }}@${{ matrix.os }}
+        name: test-${{ matrix.variant.id }}-${{ matrix.emacs_version }}@${{ matrix.os }}
         path: |
           test-*.xml
